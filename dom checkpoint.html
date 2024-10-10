@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .cart-item h3 {
+            margin: 0;
+            flex-grow: 1;
+        }
+        .cart-item button {
+            margin: 0 5px;
+            padding: 5px 10px;
+        }
+        .like.liked {
+            color: red; /* Change heart color when liked */
+        }
+        #total-price {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="cart">
+    <div class="cart-item" data-price="10">
+        <h3>Item 1</h3>
+        <button class="decrease">-</button>
+        <span class="quantity">1</span>
+        <button class="increase">+</button>
+        <button class="delete">Delete</button>
+        <button class="like">&#9825;</button> <!-- Heart symbol -->
+    </div>
+    <div class="cart-item" data-price="15">
+        <h3>Item 2</h3>
+        <button class="decrease">-</button>
+        <span class="quantity">1</span>
+        <button class="increase">+</button>
+        <button class="delete">Delete</button>
+        <button class="like">&#9825;</button>
+    </div>
+    <div id="total-price">Total: $25</div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cartItems = document.querySelectorAll('.cart-item');
+        const totalPriceElement = document.getElementById('total-price');
+
+        function updateTotal() {
+            let total = 0;
+            cartItems.forEach(item => {
+                const quantity = parseInt(item.querySelector('.quantity').textContent);
+                const price = parseFloat(item.getAttribute('data-price'));
+                total += quantity * price;
+            });
+            totalPriceElement.textContent = `Total: $${total}`;
+        }
+
+        cartItems.forEach(item => {
+            const increaseButton = item.querySelector('.increase');
+            const decreaseButton = item.querySelector('.decrease');
+            const deleteButton = item.querySelector('.delete');
+            const likeButton = item.querySelector('.like');
+            const quantityElement = item.querySelector('.quantity');
+
+            increaseButton.addEventListener('click', () => {
+                let quantity = parseInt(quantityElement.textContent);
+                quantityElement.textContent = quantity + 1;
+                updateTotal();
+            });
+
+            decreaseButton.addEventListener('click', () => {
+                let quantity = parseInt(quantityElement.textContent);
+                if (quantity > 1) {
+                    quantityElement.textContent = quantity - 1;
+                    updateTotal();
+                }
+            });
+
+            deleteButton.addEventListener('click', () => {
+                item.remove();
+                updateTotal();
+            });
+
+            likeButton.addEventListener('click', () => {
+                likeButton.classList.toggle('liked');
+            });
+        });
+
+        updateTotal(); // Initial total calculation
+    });
+</script>
+
+</body>
+</html>
